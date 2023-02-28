@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:verzeo_minor_project/view/singuppage.dart';
+import 'package:verzeo_minor_project/model/user.dart';
+import 'package:verzeo_minor_project/model/firebasehelper.dart';
+import 'package:verzeo_minor_project/model/sharedpreferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -120,22 +123,29 @@ class _LoginPage extends State<LoginPage> {
     );
   }
 
-  validatelogin() {
+  validatelogin() async{
     if (username.text.isEmpty || password.text.isEmpty) {
-      showAlert('Please Enter all the credentials', context);
-    } else if (username.text.trim() == "Verzeo" &&
-        password.text.trim() == "Verzeo") {
-      setState(() {
-        username.text = "";
-        password.text = "";
-      });
-      Navigator.pushNamed(context, '/tabpage');
+      showAlert('Make sure both the credentials are Entered.');
     } else {
-      showAlert('Please Enter valid credentials', context);
+      User? user = await FireBaseHelper.readUser(username.text);
+      if (user != null) {
+        if (user.password == password.text.trim()) {
+          Sharedpreferences.setUserId(username.text.trim());
+          navigate();
+        } else {
+          showAlert('Incorrect Password!');
+        }
+      } else {
+        showAlert('Please Enter a valid ID');
+      }
     }
   }
 
-  showAlert(String txt, BuildContext context) {
+  void navigate() {
+    Navigator.pushNamed(context,'/tabpage');
+  }
+
+  showAlert(String txt) {
     return showDialog(
       context: context,
       builder: ((context1) => AlertDialog(

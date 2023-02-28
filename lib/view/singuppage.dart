@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:verzeo_minor_project/model/firebasehelper.dart';
+import 'package:verzeo_minor_project/model/sharedpreferences.dart';
 import 'package:verzeo_minor_project/model/user.dart';
 
 class SignupPage extends StatefulWidget {
@@ -155,6 +156,7 @@ class _SignupPage extends State<SignupPage> {
             name: username.text,
             number: number.text,
             password: password.text));
+        Sharedpreferences.setUserId(username.text);
         navigate();
       } else {
         alertbox('User with the same username already exists');

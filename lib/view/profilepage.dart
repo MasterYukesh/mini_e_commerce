@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:verzeo_minor_project/model/user.dart';
+import 'package:verzeo_minor_project/model/firebasehelper.dart';
+import 'package:verzeo_minor_project/model/sharedpreferences.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -8,27 +11,32 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  User? user;
   TextEditingController name = TextEditingController();
 
   TextEditingController mail = TextEditingController();
 
   TextEditingController number = TextEditingController();
-
-  TextEditingController designation = TextEditingController();
-
-  TextEditingController skills = TextEditingController();
-
   bool readOnly = true;
 
   @override
   void initState() {
+    getdata();
+
     name.text = "Yukeswaran M";
     mail.text = "Yukesh@Verzeo.com";
     number.text = "+91 9920407912";
-    designation.text = "Flutter Dev";
-    skills.text =
-        "Android cum ios Developer, Good with Flutter Framework, dart,FireBase and sql Database";
     super.initState();
+  }
+
+  void getdata() async {
+    String id = await Sharedpreferences.getUserId();
+    user = await FireBaseHelper.readUser(id);
+    setState(() {
+      name.text = user!.name;
+      mail.text = user!.mail;
+      number.text = user!.number;
+    });
   }
 
   @override
@@ -145,73 +153,6 @@ class _ProfilePageState extends State<ProfilePage> {
                             borderSide: BorderSide(color: Colors.black))),
                     readOnly: readOnly,
                     controller: number,
-                  ),
-                ),
-              )
-            ],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  'Designation',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-              const SizedBox(
-                width: 30,
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    onChanged: (value) => setState(() {
-                      designation.text = value;
-                    }),
-                    decoration: const InputDecoration(
-                        border: UnderlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            borderSide: BorderSide(color: Colors.black))),
-                    readOnly: readOnly,
-                    controller: designation,
-                  ),
-                ),
-              )
-            ],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  'Skills',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-              const SizedBox(
-                width: 70,
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    maxLines: null,
-                    onChanged: (value) => setState(() {
-                      skills.text = value;
-                    }),
-                    decoration: const InputDecoration(
-                        border: UnderlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            borderSide: BorderSide(color: Colors.black))),
-                    readOnly: readOnly,
-                    controller: skills,
                   ),
                 ),
               )
