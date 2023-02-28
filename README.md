@@ -1,4 +1,4 @@
-# verzeo_minor_project
+# mini_e_commerce
 
 A new Flutter project.
 
